@@ -1,0 +1,43 @@
+#!/bin/bash
+
+P1=0
+P2=0
+T=0
+read -p "Number of Games: " N
+for ((i=1;i<=N;i++))
+do
+	python3 /home/nheanj/checkers_AI/src/checkers-python/AI_Runner.py 7 7 2 l /home/nheanj/checkers_AI/src/checkers-python/main.py /home/nheanj/checkers_AI/Tools/Sample_AIs/Random_AI/main.py | tail -n -1 >> output.txt
+	echo $i
+done 
+
+shopt -s lastpipe
+cat output.txt | while read line
+do
+#	if [[ ${line} -eq "Tie" ]]
+#        then
+ #               let "T=T+1"
+#	fi
+	for j in ${line} 	
+	do
+	#	str=$(echo $j | tr -d '\r')
+	#	echo ${j}
+		if [[ $j -eq 1 ]]
+		then
+	#		echo "here"
+			let "P1=P1+1"
+		elif [[ $j -eq 2 ]]
+		then
+			let "P2=P2+1"
+#	        elif [[ ${line} -eq "Tie" ]]
+#	       	then
+ #	              	 let "T=T+1"
+#       fi
+		fi
+	done
+done
+let "T=N-P1-P2"
+echo "P1 wins: ${P1}"
+echo "P2 wins: ${P2}"
+echo "Ties: ${T}"
+
+exit
