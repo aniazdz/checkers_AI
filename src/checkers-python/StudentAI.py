@@ -1,5 +1,6 @@
 from random import randint
 import copy
+import math
 from BoardClasses import Move
 from BoardClasses import Board
 #The following part should be completed by students.
@@ -7,24 +8,30 @@ from BoardClasses import Board
 class TreeNode():
     # class for TreeNode object
         # keeps track of all basic attributes that a tree node should has
-    def __init__(self):
-        # self.color = color
-        # self.move = move
+    def __init__(self, color, move=None):
+        self.color = color
+        self.move = move
         self.value = None
         self.children = []
 
 class Tree():
     # class for Tree object
     # -> main purpose is create and print and possibly update
-        def __init__(self, root):
+        def __init__(self, root, board, depth=5):
             self.root = root# intialize tree from root
-            #self.level
+            self.board = board
+            self.depth = depth
+            self.create_tree(root, 0)
 
-        def create_tree(self, treeNode: TreeNode):
+        def create_tree(self, node, depth):
             # create tree up to specified depth to pick next path ---> simulate step?
 
             # select and expand nodes
-            pass
+            if (self.depth == depth):
+                return
+            for c in self.board.get_all_possible_moves(self.root.color):
+                self.root.children.append(create_tree(treeNode, depth + 1))
+            
 
         def print_tree(self, node, level):
             print(" " * level, node.value, "->", node.move)
@@ -61,12 +68,12 @@ class StudentAI():
         move = moves[0][0]
         for i in range(len(moves)):
             for j in range(len(moves[i])):
-                self.board.make_move(moves[i][j], self.color)
-                eval = self.heuristic(self.board)
+                c = copy.deepcopy(self.board)
+                c.make_move(moves[i][j], self.color)
+                eval = self.heuristic(c)
                 if eval > prev:
                     move = moves[i][j]
                     prev = eval
-                self.board.undo()
         return move
     
     def get_move(self,move):
@@ -80,8 +87,36 @@ class StudentAI():
         
         self.board.make_move(move,self.color)
 
-        # root = TreeNode()
-        #
-        # tree = Tree(root)
+        root = TreeNode(self.opponent[self.color])
+        
+        tree = Tree(root, self.board)
+        
 
         return move
+
+#     def minimax_search(self, game, state): #game - moves? state- board?
+#         self.color = #self.board.
+#         value, move = self.maxValue(game, state)
+        
+#         return move
+    
+#     def maxValue(self, game, state):
+#         if (0==k): #k - depth
+#             return evaluation(moves)
+#         v = math.inf
+#         for a in self.board.get_all_possible_moves(self.color):
+#             v2, a2 = self.minValue(game, game.result(state, a))
+#             if v2 > v:
+#                 v, move = v2, a
+#         return v, move
+    
+#     def minValue(game, state)
+#         if (0==k):
+#             return evaluation(moves)
+#         v = - math.inf
+#         for i in self.board.get_all_possible_moves(self.color):
+#             v2, a2 = self.maxValue(game, game.result(state, a))
+#             if v2 < v:
+#                 v, move = v2, a
+#         return v, move
+    
