@@ -61,12 +61,12 @@ class StudentAI():
         move = moves[0][0]
         for i in range(len(moves)):
             for j in range(len(moves[i])):
-                c = copy.deepcopy(self.board)
-                c.make_move(moves[i][j], self.color)
-                eval = self.heuristic(c)
+                self.board.make_move(moves[i][j], self.color)
+                eval = self.heuristic(self.board)
                 if eval > prev:
                     move = moves[i][j]
                     prev = eval
+                self.board.undo()
         return move
     
     def get_move(self,move):
