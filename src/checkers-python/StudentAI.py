@@ -26,11 +26,11 @@ class Tree():
             # select and expand nodes
             pass
 
-        def print_tree(self, node, level):
-            print(" " * level, node.value, "->", node.move)
-            if len(node.children) != 0:  # as long as node has children --> recurse for printing
-                for c in node.children:
-                    self.print_tree(c, node + 1)
+#         def print_tree(self, node, level):
+#             print(" " * level, node.value, node.move)
+#             if len(node.children) != 0:  # as long as node has children --> recurse for printing
+#                 for c in node.children:
+#                     self.print_tree(c, node + 1)
 
 class StudentAI():
 
