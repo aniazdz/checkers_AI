@@ -153,7 +153,7 @@ class MCTS():
             sorted_moves = sorted(self.root.children.items(), key=lambda x: x[1].visit_count, reverse=True)
             return sorted_moves[0][0]
         except:
-            return random_index(sorted(self.root.children.items(), reverse=True))
+            return random_index(self.root.children.items())
 
     def search(self, time_limit):
         '''
