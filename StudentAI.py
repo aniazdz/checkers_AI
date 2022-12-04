@@ -54,7 +54,7 @@ class StudentAI():
         self.board.initialize_game()
         self.color = 2
         self.mcts = MCTS(TreeNode(self.board, self.color, None, None))
-        self.total_time_remaining = 89
+        self.total_time_remaining = 119
         self.time_divisor = row * col * 0.5
         self.timed_move_count = 2
         
@@ -82,7 +82,7 @@ class StudentAI():
         
         time_limit = self.total_time_remaining / self.time_divisor
 
-        move = self.mcts.search(time_limit)
+        move = self.mcts.simulation(time_limit)
         self.board.make_move(move, self.color)
         self.update_tree(move, self.color)
         
@@ -103,39 +103,39 @@ class MCTS():
     def __init__(self, root):
         self.root = root
 
-    def best_child(self):
+    def best_child(self, board_copy, color_copy):
         try:
             sorted_moves = sorted(self.root.children.items(), key=lambda x: x[1].visit_count, reverse=True)
             return sorted_moves[0][0]
         except:
-            return random_index(self.root.children.items())
+            move = random_index(board_copy.get_all_possible_moves(color_copy))
+            return self.root.children[move]
 
-    def search(self, time_limit):
+    def simulation(self, time_limit):
         timeout = time() + time_limit
                 
         while time() < timeout:
             node = self.selection(self.root)
             board_copy = deepcopy(node.board)
             color_copy = node.color
-            self.simulation(board, color)
             
-        return self.best_child()
-    
-    def simulation(self, board, color):
-        winner = board_copy.is_win(opponent[color_copy])
+            winner = board_copy.is_win(opponent[color_copy])
             
             while not winner:
                 board_copy.make_move(random_index(board_copy.get_all_possible_moves(color_copy)), color_copy)
                 winner = board_copy.is_win(color_copy)
                 color_copy = opponent[color_copy]
-    
+            
             if winner == opponent[node.color]:
                 wins = 1
             elif winner == node.color:
                 wins = -1
             elif winner == -1:
                 wins = 0
+                
             node.backpropogate(wins)
+
+        return self.best_child(board_copy, color_copy)
 
     
     def selection(self, node):
@@ -148,5 +148,3 @@ class MCTS():
             if child is None:
                 node.children[move] = TreeNode(node.board, opponent[node.color], move, node)
                 return node.children[move]
-    
-    
